@@ -1,46 +1,68 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import './Recipe.css';
 
-function Recipe() {
-  const { id } = useParams();
-  const [recipe, setRecipe] = useState(null);
-  const [loading, setLoading] = useState(true);
+const Recipe = () => {
+    const { id } = useParams();
+    const [recipe, setRecipe] = useState(null);
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchRecipeData = async () => {
-      const response = await fetch(`/api/recipes/${id}`);
-      const data = await response.json();
-      setRecipe(data);
-      setLoading(false);
-    };
+    useEffect(() => {
+        const fetchRecipeData = async () => {
+            try {
+                const response = await fetch(`/api/recipes/${id}`);
+                if (!response.ok) {
+                    throw new Error('Не удалось загрузить данные рецепта');
+                }
+                const data = await response.json();
+                setRecipe(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    fetchRecipeData();
-  }, [id]);
+        fetchRecipeData();
+    }, [id]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+    if (loading) {
+        return <p>Загрузка...</p>;
+    }
 
-  if (!recipe) {
-    return <div>Recipe not found</div>;
-  }
+    if (error) {
+        return <p>{error}</p>;
+    }
 
-  return (
-    <div>
-      <h1>{recipe.title}</h1>
-      <h2>{recipe.category}</h2>
-      <p>{recipe.description}</p>
-      <h3>Ingredients:</h3>
-      <ul>
-        {recipe.ingredients.map((ingredient, index) => (
-          <li key={index}>{ingredient}</li>
-        ))}
-      </ul>
-      <h3>Instructions:</h3>
-      <p>{recipe.instructions}</p>
-      <Link to={`/category/${recipe.categoryId}`}>Back to Category</Link>
-    </div>
-  );
-}
+    if (!recipe) {
+        return <p>Рецепт не найден.</p>;
+    }
+
+    return (
+        <div className="recipe-container">
+            <h1 className="recipe-title">{recipe.title}</h1>
+            <div className="ingredients">
+                <h2 className="ingredients-title">Ингредиенты:</h2>
+                <ul>
+                    {Array.isArray(recipe.ingredients) && recipe.ingredients.length > 0 ? (
+                        recipe.ingredients.map((ingredient, index) => (
+                            <li key={ingredient.id || index} className="ingredient-item">
+                                {ingredient.name || ingredient}
+                            </li>
+                        ))
+                    ) : (
+                        <p>Нет ингредиентов.</p>
+                    )}
+                </ul>
+            </div>
+            <div className="instructions">
+                <h2 className="instructions-title">Инструкция:</h2>
+                <p className="instruction-item">{recipe.instructions || 'Нет инструкции'}</p>
+            </div>
+            <a href="/" className="back-button">Назад</a>
+        </div>
+    );
+};
 
 export default Recipe;

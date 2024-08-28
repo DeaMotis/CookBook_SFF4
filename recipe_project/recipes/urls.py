@@ -3,8 +3,8 @@ from rest_framework.routers import DefaultRouter
 from .views import CategoryViewSet, RecipeViewSet
 
 router = DefaultRouter()
-router.register('categories', CategoryViewSet)
-router.register('recipes', RecipeViewSet)
+router.register(r'categories', CategoryViewSet, basename='category')
+router.register(r'recipes', RecipeViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
