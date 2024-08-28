@@ -6,7 +6,6 @@ function Home() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      // Предположим, у вас есть API для получения категорий
       const response = await fetch('/api/categories');
       const data = await response.json();
       setCategories(data);

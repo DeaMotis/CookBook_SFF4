@@ -8,31 +8,21 @@ function Recipe() {
 
   useEffect(() => {
     const fetchRecipeData = async () => {
-      try {
-        const response = await fetch(`/api/recipes/${id}`);
-        if (!response.ok) {
-          throw new Error('Ошибка при загрузке данных');
-        }
-        const data = await response.json();
-        setRecipe(data);
-      } catch (error) {
-        console.error('Ошибка:', error);
-      } finally {
-        setLoading(false);
-      }
+      const response = await fetch(`/api/recipes/${id}`);
+      const data = await response.json();
+      setRecipe(data);
+      setLoading(false);
     };
 
     fetchRecipeData();
   }, [id]);
 
-  // индикатор загрузки
   if (loading) {
-    return <div>Загрузка...</div>;
+    return <div>Loading...</div>;
   }
 
-  // Если данных нет, показываем сообщение об отсутствии рецепта
   if (!recipe) {
-    return <div>Рецепт не найден</div>;
+    return <div>Recipe not found</div>;
   }
 
   return (
@@ -40,15 +30,15 @@ function Recipe() {
       <h1>{recipe.title}</h1>
       <h2>{recipe.category}</h2>
       <p>{recipe.description}</p>
-      <h3>Ингредиенты:</h3>
+      <h3>Ingredients:</h3>
       <ul>
         {recipe.ingredients.map((ingredient, index) => (
           <li key={index}>{ingredient}</li>
         ))}
       </ul>
-      <h3>Инструкция:</h3>
+      <h3>Instructions:</h3>
       <p>{recipe.instructions}</p>
-      <Link to={`/category/${recipe.categoryId}`}>Назад в категорию</Link>
+      <Link to={`/category/${recipe.categoryId}`}>Back to Category</Link>
     </div>
   );
 }
