@@ -40,4 +40,22 @@ Django и Django Rest Framework:
 - react-router для управления навигацией между страницами.
 - Возможность просмотра категорий и конкретных рецептов.
 
+Запуск сервера:
+cd recipe_project
+cd .\recipe-client\ 
+node server.js  
+
+Запуск проекта:
+cd recipe_project
+python manage.py runserver
+
+Запуск приложения:
+cd recipe_project
+cd .\recipe-client\ 
+npm start
+
+
+Просмотреть проект по адресу http://localhost:8000/.
 Сервер запущен на http://localhost:5000
+Приложение:  http://localhost:3000
+
