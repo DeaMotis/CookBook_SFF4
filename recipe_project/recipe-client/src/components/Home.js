@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 function Home() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/categories/')
-      .then(response => {
-        setCategories(response.data);
-      });
+    const fetchCategories = async () => {
+      // Предположим, у вас есть API для получения категорий
+      const response = await fetch('/api/categories');
+      const data = await response.json();
+      setCategories(data);
+    };
+
+    fetchCategories();
   }, []);
 
   return (
     <div>
-      <h1>Рецепты</h1>
+      <h1>Welcome to the Recipe App</h1>
+      <h2>Categories</h2>
       <ul>
-        {categories.map(category => (
+        {categories.map((category) => (
           <li key={category.id}>
             <Link to={`/category/${category.id}`}>{category.name}</Link>
           </li>
